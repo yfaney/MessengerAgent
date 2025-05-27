@@ -62,7 +62,7 @@ def tail_text(text: str, n=1):
 
 
 @ui_synchronized
-def get_chat_history():
+def get_chat_history() -> str:
     text = using_crawling()
     print(f"[감지된 채팅]\n{truncate_text(text) if not is_debug_mode() else text}")
     return text

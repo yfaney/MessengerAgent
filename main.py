@@ -2,14 +2,20 @@ import os
 import sys
 # import logging.config
 from fastapi import FastAPI, HTTPException, Body, BackgroundTasks
-from fastapi import status, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-import jwt
+# from fastapi import status, Depends, HTTPException
+# from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+#import jwt
 from pydantic import BaseModel
-from typing import Annotated, Optional, Dict, Any
-import uvicorn
+# from typing import Annotated, Optional, Dict, Any
+# import uvicorn
 
-from common.util import auth_util as auth
+
+# Add the project root directory to Python path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, project_root)
+
+
+# from common.util import auth_util as auth
 from kakaotalk_capture import get_chat_history, send_to_kakao
 
 # Define messenger request model
@@ -23,17 +29,19 @@ app = FastAPI(
     version="1.0.0"
 )
 
-@app.post("/chat")
+@app.post("/api/chat")
 async def post_chat_message(
     request: MessengerRequest = Body(...),
 ):
-    return send_to_kakao(request.message)
+    send_to_kakao(request.message)
+    return { "status": "sent" }
 
 
-@app.get("/chat")
-async def get_chat_history(
+@app.get("/api/chat")
+async def get_chat_message(
 ):
-    return { "message": get_chat_history() }
+    chat_history = get_chat_history()
+    return { "message": chat_history }
 
 
 def main():
